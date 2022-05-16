@@ -5,7 +5,7 @@ This is our chat application project for the vocational training under Ardent.
 ## Members
 - Anindya Kanti Mitra @anindyamitra15
 - Aryan Shaw @Aryanshaw
-- Ayush Singh @singhayush
+- Ayush Singh @singhayushh
 - Agni Sain @agnisain123
 
 ## Project Contents

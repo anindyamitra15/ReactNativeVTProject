@@ -1,3 +1,5 @@
+
+
 /**
  * Main server app
  * This index.js file is responsible for all APIs and Socket connections
@@ -17,6 +19,7 @@ const Broadcast = require("./models/Broadcast");
 
 //Environment Variables
 require("dotenv/config");
+
 
 //Initialize the server
 const port = process.env.PORT; //Default port

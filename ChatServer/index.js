@@ -1,5 +1,3 @@
-
-
 /**
  * Main server app
  * This index.js file is responsible for all APIs and Socket connections
@@ -13,16 +11,15 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 //DB Models
-const User = require("./models/User");
-const Chat = require("./models/Chat");
-const Broadcast = require("./models/Broadcast");
+const User = require("./src/models/User");
+const Chat = require("./src/models/Chat");
+const Broadcast = require("./src/models/Broadcast");
 
 //Environment Variables
 require("dotenv/config");
 
-
 //Initialize the server
-const port = process.env.PORT; //Default port
+const port = Number(process.env.PORT || 3000); //Default port
 const app = express(); //Define the express app
 const server = http.createServer(app); //Create server with express
 const io = socketIo(server); //Initialize Socket
@@ -32,7 +29,7 @@ app.use(bodyParser.json());
 
 //DB Connection
 mongoose.connect(
-  process.env.DB_CONNECTION,
+  String(process.env.DB_CONNECTION),
   { useNewUrlParser: true, useUnifiedTopology: true },
   () => {
     console.log("Connected to DB");
@@ -40,35 +37,38 @@ mongoose.connect(
 );
 
 /**API Declaration */
+const startTime = new Date();
+app.get("/", (_, res) => {
+  res.send(`Server running since ${startTime.toLocaleString()}`);
+});
 
 //User login API
-app.post("/login", (req, res) => {
-  const query = User.find({ id: req.body.id });
-  query
-    .exec()
-    .then(data => {
-      if (data.length === 0) {
-        const user = new User({
-          name: req.body.name,
-          id: req.body.id,
-          photo: req.body.photo
-        });
+app.post("/login", async (req, res) => {
+  try {
+    const { id, name, photo } = req.body;
+    //find user by id and return
+    if (id) {
+      const findUser = await User.findById(id);
 
-        user
-          .save()
-          .then(data => {
-            res.json(data);
-          })
-          .catch(error => {
-            res.json(error);
-          });
-      } else {
-        res.json(data[0]);
+      if (findUser) {
+        return res.status(202).json(findUser);
       }
-    })
-    .catch(error => {
-      res.json(error);
-    });
+    }
+
+    if (!name) {
+      res.status(400).json({ message: `name is required` });
+    }
+
+    const findUser = await User.findOne({name});
+    if(findUser)
+      return res.status(202).json(findUser);
+    // new user creation
+    const newUser = new User({ name, photo });
+    await newUser.save();
+    return res.status(200).json(newUser);
+  } catch (error) {
+    res.json(error);
+  }
 });
 
 //New chat message API
@@ -76,25 +76,25 @@ app.post("/chats", (req, res) => {
   const query = Chat.findOne({
     $or: [
       { reciever: req.body.reciever, sender: req.body.sender },
-      { reciever: req.body.sender, sender: req.body.reciever }
-    ]
+      { reciever: req.body.sender, sender: req.body.reciever },
+    ],
   });
   query
     .exec()
-    .then(data => {
+    .then((data) => {
       if (data === null) {
         const chat = new Chat({
           sender: req.body.sender,
           reciever: req.body.reciever,
-          messages: req.body.messages
+          messages: req.body.messages,
         });
 
         chat
           .save()
-          .then(data => {
+          .then((data) => {
             res.json(data);
           })
-          .catch(error => {
+          .catch((error) => {
             res.json(error);
           });
       } else {
@@ -102,22 +102,22 @@ app.post("/chats", (req, res) => {
           {
             $or: [
               { reciever: req.body.reciever, sender: req.body.sender },
-              { reciever: req.body.sender, sender: req.body.reciever }
-            ]
+              { reciever: req.body.sender, sender: req.body.reciever },
+            ],
           },
           { $set: { messages: req.body.messages } }
         );
         updateChat
           .exec()
-          .then(data => {
+          .then((data) => {
             res.json(data);
           })
-          .catch(error => {
+          .catch((error) => {
             res.json(error);
           });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       res.json(error);
     });
 });
@@ -127,11 +127,11 @@ app.get("/chats/:sender/:reciever", (req, res) => {
   const chat = Chat.findOne({
     $or: [
       { reciever: req.params.reciever, sender: req.params.sender },
-      { reciever: req.params.sender, sender: req.params.reciever }
-    ]
+      { reciever: req.params.sender, sender: req.params.reciever },
+    ],
   });
 
-  chat.exec().then(data => {
+  chat.exec().then((data) => {
     if (data === null) {
       res.json([]);
     } else {
@@ -143,10 +143,10 @@ app.get("/chats/:sender/:reciever", (req, res) => {
 //Chatrooms getter API
 app.get("/chats/:userId", (req, res) => {
   const chat = Chat.find({
-    $or: [{ reciever: req.params.userId }, { sender: req.params.userId }]
+    $or: [{ reciever: req.params.userId }, { sender: req.params.userId }],
   });
 
-  chat.exec().then(data => {
+  chat.exec().then((data) => {
     if (data.length === 0) {
       res.json([]);
     } else {
@@ -161,10 +161,10 @@ app.post("/broadcast", (req, res) => {
 
   broadcast
     .save()
-    .then(data => {
+    .then((data) => {
       res.json(data);
     })
-    .catch(error => {
+    .catch((error) => {
       res.json(error);
     });
 });
@@ -173,7 +173,7 @@ app.post("/broadcast", (req, res) => {
 app.get("/broadcast", (req, res) => {
   const chat = Broadcast.find();
 
-  chat.exec().then(data => {
+  chat.exec().then((data) => {
     if (data === null) {
       res.json(data);
     } else {
@@ -185,7 +185,7 @@ app.get("/broadcast", (req, res) => {
 //User finder API
 app.get("/find/:id", (req, res) => {
   const user = User.find({ id: req.params.id });
-  user.exec().then(data => {
+  user.exec().then((data) => {
     res.json(data[0]);
   });
 });
@@ -193,7 +193,7 @@ app.get("/find/:id", (req, res) => {
 //Active users finder API
 app.get("/users/active", (req, res) => {
   const users = User.find({ isActive: true });
-  users.exec().then(data => {
+  users.exec().then((data) => {
     res.json(data);
   });
 });
@@ -201,7 +201,7 @@ app.get("/users/active", (req, res) => {
 //Inactive users finder API
 app.get("/users/inactive", (req, res) => {
   const users = User.find({ isActive: false });
-  users.exec().then(data => {
+  users.exec().then((data) => {
     res.json(data);
   });
 });
@@ -210,9 +210,9 @@ app.get("/users/inactive", (req, res) => {
 
 var clients = []; //connected clients
 
-io.on("connection", socket => {
+io.on("connection", (socket) => {
   console.log("New User Connected");
-  socket.on("storeClientInfo", function(data) {
+  socket.on("storeClientInfo", function (data) {
     console.log(data.customId + " Connected");
     //store the new client
     var clientInfo = new Object();
@@ -231,7 +231,7 @@ io.on("connection", socket => {
     });
   });
 
-  socket.on("disconnect", function(data) {
+  socket.on("disconnect", function (data) {
     for (var i = 0, len = clients.length; i < len; ++i) {
       var c = clients[i];
 
@@ -242,7 +242,7 @@ io.on("connection", socket => {
 
         //update the active status
         const res = User.updateOne({ id: c.customId }, { isActive: false });
-        res.exec().then(data => {
+        res.exec().then((data) => {
           console.log("Deactivated " + c.customId);
 
           //notify others
@@ -256,9 +256,9 @@ io.on("connection", socket => {
 
 //Messages Socket
 const chatSocket = io.of("/chatsocket");
-chatSocket.on("connection", function(socket) {
+chatSocket.on("connection", function (socket) {
   //On new message
-  socket.on("newMessage", data => {
+  socket.on("newMessage", (data) => {
     //Notify the room
     socket.broadcast.emit("incommingMessage", "reload");
   });

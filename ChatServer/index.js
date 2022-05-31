@@ -59,20 +59,52 @@ app.post("/login", async (req, res) => {
       res.status(400).json({ message: `name is required` });
     }
 
-    const findUser = await User.findOne({name});
-    if(findUser)
-      return res.status(202).json(findUser);
+    const findUser = await User.findOne({ name });
+    if (findUser) return res.status(202).json(findUser);
     // new user creation
     const newUser = new User({ name, photo });
     await newUser.save();
     return res.status(200).json(newUser);
   } catch (error) {
-    res.json(error);
+    res.status(500).json(error);
   }
 });
 
 //New chat message API
-app.post("/chats", (req, res) => {
+app.post("/chats", async (req, res) => {
+  try {
+    const findChat = await Chat.findOne({
+      $or: [
+        { reciever: req.body.reciever, sender: req.body.sender },
+        { reciever: req.body.sender, sender: req.body.reciever },
+      ],
+    });
+    if (findChat === null) {
+      const chat = new Chat({
+        sender: req.body.sender,
+        reciever: req.body.reciever,
+        messages: req.body.messages,
+      });
+
+      const savedChat = await chat.save();
+      return res.json(savedChat);
+    }
+
+    const updateChat = await Chat.updateOne(
+      {
+        $or: [
+          { reciever: req.body.reciever, sender: req.body.sender },
+          { reciever: req.body.sender, sender: req.body.reciever },
+        ],
+      },
+      { $set: { messages: req.body.messages } }
+    );
+
+//TODO:
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
   const query = Chat.findOne({
     $or: [
       { reciever: req.body.reciever, sender: req.body.sender },

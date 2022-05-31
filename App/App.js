@@ -5,6 +5,8 @@ import Home from "./src/pages/home.page";
 import Login from "./src/pages/login.page";
 import Message from "./src/pages/Message"
 import SearchPage from "./src/pages/SearchPage";
+import CreateAcc from "./src/pages/CreateAcc";
+
 import TopUi from "./src/components/TopUi"
 import { fetchSomething } from "./src/services/api.service";
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -41,7 +43,10 @@ export default function App() {
               iconName = focused ? 'search' : 'search-outline';
               size = focused ? size + 5 : size;
             } 
-
+            else if (route.name === 'Create') {
+              iconName = focused ? 'create' : 'create-outline';
+              size = focused ? size + 5 : size;
+            } 
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -61,7 +66,8 @@ export default function App() {
         <Tab.Screen name="Home" component={Home} options={{headerShown: false}}/>
         <Tab.Screen name="Search" component={SearchPage} />
         <Tab.Screen name="Message" component={Message} />
-        <Tab.Screen name="Login" component={Login}  />
+        <Tab.Screen name="Create" component={CreateAcc} options={{headerShown: false}}/>
+        <Tab.Screen name="Login" component={Login} options={{headerShown: false}} />
           
         </Tab.Navigator>
       </NavigationContainer>

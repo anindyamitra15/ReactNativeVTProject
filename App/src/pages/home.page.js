@@ -120,6 +120,8 @@ const styles = StyleSheet.create({
     borderColor: "#8A9DA4",
     paddingHorizontal: 15,
     // paddingTop:28,
+    marginBottom:-3
+
   },
   chatScreen: {
     // backgroundColor: 'white',
@@ -137,7 +139,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
-
     // width: '100%',
   },
   header2: {

@@ -8,7 +8,6 @@ import SearchPage from "./src/pages/SearchPage";
 import CreateAcc from "./src/pages/CreateAcc";
 
 import TopUi from "./src/components/TopUi"
-import { fetchSomething } from "./src/services/api.service";
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';

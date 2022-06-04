@@ -8,19 +8,20 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-  ToastAndroid
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
-//   import CheckBox from 'expo-checkbox';
 import { CheckBox } from "react-native-elements";
+import { login } from "../services/user.api.service";
 
-const CreateAcc = ({ navigation}) => {
+const CreateAcc = ({ navigation }) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
 
   const check = () => {
     if (toggleCheckBox === true) {
@@ -30,22 +31,23 @@ const CreateAcc = ({ navigation}) => {
     }
   };
 
-  const submit=()=>{
-
-    if(!name || !email || !phone|| !password){
-    //   Alert.alert("please fill up every fields")
-    ToastAndroid.show('please fill up every fields',ToastAndroid.SHORT)
-
-    }else{
-      ToastAndroid.show('Account Created',ToastAndroid.SHORT)
-    //   createId();
-      navigation.navigate('Home')
-      // console.log(name,password)
-     
-      
+  const submit = async () => {
+    if (!name || !email || !phone || !password) {
+      //   Alert.alert("please fill up every fields")
+      return ToastAndroid.show(
+        "please fill up every fields",
+        ToastAndroid.SHORT
+      );
     }
 
-  }
+    // if all fields are valid
+    const data = await login(name, phone);
+
+    ToastAndroid.show(`Account Created for ${data.user.name}`, ToastAndroid.SHORT);
+    //   createId();
+    navigation.navigate("Home");
+    // console.log(name,password)
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -68,41 +70,51 @@ const CreateAcc = ({ navigation}) => {
           <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
             Enter your name
           </Text>
-          <TextInput style={styles.textinput} 
-          placeholder="Enter name" 
-          value={name}
-           onChangeText={(userData) => setName(userData)}
+          <TextInput
+            style={styles.textinput}
+            placeholder="Enter name"
+            value={name}
+            onChangeText={(userData) => setName(userData)}
           />
           <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
             Enter your email
           </Text>
-          <TextInput style={styles.textinput} 
-          placeholder="email@gmail.com" 
-          value={email}
-          onChangeText={(userData)=>setEmail(userData)}
+          <TextInput
+            style={styles.textinput}
+            placeholder="email@gmail.com"
+            value={email}
+            onChangeText={(userData) => setEmail(userData)}
           />
           <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
             Enter your phone number
           </Text>
-          <TextInput style={styles.textinput}
-           placeholder="+9155656662"
-           value={phone}
-           onChangeText={(userData)=>setPhone(userData)}
-           keyboardType="phone-pad"
-           />
+          <TextInput
+            style={styles.textinput}
+            placeholder="+9155656662"
+            value={phone}
+            onChangeText={(userData) => setPhone(userData)}
+            keyboardType="phone-pad"
+          />
           <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
             Create Password
           </Text>
-          <TextInput style={styles.textinput} 
-          placeholder="@1234567" 
-          value={password}
-           onChangeText={(userData)=>setPassword(userData)}
-          secureTextEntry
+          <TextInput
+            style={styles.textinput}
+            placeholder="@1234567"
+            value={password}
+            onChangeText={(userData) => setPassword(userData)}
+            secureTextEntry
           />
           <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
             Confirm Password
           </Text>
-          <TextInput style={styles.textinput} placeholder="Confirm it" />
+          <TextInput
+            style={styles.textinput}
+            placeholder="Confirm it"
+            value={confirmPass}
+            onChangeText={(userData) => setConfirmPass(userData)}
+            secureTextEntry
+          />
 
           <View style={styles.wrapper}>
             <CheckBox
@@ -120,10 +132,16 @@ const CreateAcc = ({ navigation}) => {
           </View>
 
           <View style={{ paddingRight: 200 }}>
-            <View style={[styles.button, {backgroundColor: toggleCheckBox ? '#416EE7' : 'grey'}]}>
-              <TouchableOpacity styles={[styles.loginBtn]}
-               disabled={!toggleCheckBox}
-               onPress={submit}
+            <View
+              style={[
+                styles.button,
+                { backgroundColor: toggleCheckBox ? "#416EE7" : "grey" },
+              ]}
+            >
+              <TouchableOpacity
+                styles={[styles.loginBtn]}
+                disabled={!toggleCheckBox}
+                onPress={submit}
               >
                 <Text
                   style={{
@@ -201,7 +219,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 10,
     // backgroundColor: "#416EE7",
-    
+
     padding: 15,
     borderRadius: 15,
     paddingHorizontal: 30,

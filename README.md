@@ -2,6 +2,8 @@
 
 This is our chat application project for the vocational training under Ardent.
 
+For the backend section, credit goes to Ayush for his [backend repository](https://github.com/singhayushh/chatserver-backend)
+
 ## Members
 - Anindya Kanti Mitra @anindyamitra15
 - Aryan Shaw @Aryanshaw
@@ -12,7 +14,7 @@ This is our chat application project for the vocational training under Ardent.
 ```
 ./
  |-   App - our React Native App Source Code
- |-   ChatServer - node based Chat Server
+ |-   README
 ```
 
 ## Description
@@ -20,7 +22,6 @@ This is our chat application project for the vocational training under Ardent.
 ## Tech Stacks
 - React Native
 - Socket.io
-- Express
 - Expo CLI
 - Node JS 
 

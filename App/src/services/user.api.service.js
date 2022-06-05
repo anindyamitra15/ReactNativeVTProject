@@ -11,7 +11,7 @@ export const register = async (id, name, photo = "") => {
     });
     return res.data;
   } catch (err) {
-    return err.message;
+    throw err.message;
   }
 };
 
@@ -22,8 +22,8 @@ export const login = async (id) => {
       id,
     });
     return res.data;
-  } catch (err) {
-    return err.message;
+  } catch (error) {
+    throw error.message;
   }
 };
 
@@ -33,7 +33,7 @@ export const fetchUser = async (id) => {
     const res = await axios.get(uri);
     return res.data;
   } catch (error) {
-    return error.message;
+    throw error.message;
   }
 };
 
@@ -43,7 +43,7 @@ export const isActive = async (id) => {
     const res = await axios.get(uri);
     return res.data;
   } catch (error) {
-    return error.message;
+    throw error.message;
   }
 };
 
@@ -53,6 +53,6 @@ export const isInactive = async (id) => {
     const res = await axios.get(uri);
     return res.data;
   } catch (error) {
-    return error.message;
+    throw error.message;
   }
 };

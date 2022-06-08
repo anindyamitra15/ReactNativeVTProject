@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     backgroundColor: "white",
+    overflow:"hidden"
   },
   topStyle: {
     backgroundColor: "#416EE7",
@@ -187,9 +188,9 @@ const styles = StyleSheet.create({
   BottomStyle: {
     backgroundColor: "#416EE7",
     padding: 60,
-    top: -50,
+    marginTop: 0,
     borderTopLeftRadius: 150,
-    alignItems: "flex-end",
+    // alignItems: "flex-end",
   },
   CreateAcc: {
     display: "flex",

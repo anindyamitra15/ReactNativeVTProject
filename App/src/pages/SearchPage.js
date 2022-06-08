@@ -5,12 +5,15 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  TextInput,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import data from "../Data/data";
 
 const SearchPage = ({ navigation }) => {
+  const [search, setSearch] = useState("");
+
   const navigateMessage = () => {
     navigation.navigate("Message");
   };
@@ -31,6 +34,34 @@ const SearchPage = ({ navigation }) => {
 
   return (
     <View>
+      <View style={{ marginTop: 10 }}>
+        <View
+          style={{
+            backgroundColor: "white",
+            padding: 5,
+            borderRadius: 10,
+            elevation: 5,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <TextInput
+            style={{ padding: 10,marginLeft:10 }}
+            placeholder="Search for people"
+            underlineColorAndroid="rgba(0,0,0,0.1)"
+            value={search}
+            onChangeText={(userData) => setSearch(userData)}
+          />
+          <TouchableOpacity style={{ marginLeft: 20, left: 170 }}>
+            <Icons
+              name="search"
+              size={27}
+              style={{ flexDirection: "row", color: "blue" }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <View
         style={{
           flexDirection: "row",
@@ -56,6 +87,7 @@ const SearchPage = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
+
       <FlatList
         style={styles.chatScreen}
         data={data}
@@ -91,7 +123,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 10,
-    marginBottom:-10,
+    marginBottom: -10,
   },
   header2: {
     fontSize: 17,

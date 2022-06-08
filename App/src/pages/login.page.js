@@ -23,6 +23,7 @@ const Login = ({ navigation}) => {
 
       </ImageBackground>
         <View style={styles.login}>
+          <View style={{}}>
           <Text style={{marginTop: 30 , fontSize:30 , fontWeight: "bold", left:30,elevation:5}}>Login here</Text>
           <View style={{paddingHorizontal: 30, marginTop:15}}>
           <Text style={{color:"black", fontSize:17,marginBottom:10}}>Username</Text>
@@ -49,10 +50,11 @@ const Login = ({ navigation}) => {
 
            </View>
 
-           <TouchableOpacity onPress={navigateToCreate}>
+           <TouchableOpacity onPress={navigateToCreate} style={{paddingBottom:70}}>
            <Text style={{textAlign: 'center', color:"blue" , fontSize:17,marginTop:45 , textDecorationLine: 'underline'}}>Don't have an account?</Text>
            </TouchableOpacity>
 
+          </View>
           </View>
         </View>
     </ScrollView>

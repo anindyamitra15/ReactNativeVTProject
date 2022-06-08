@@ -17,6 +17,11 @@ import Icons from "react-native-vector-icons/Ionicons";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Home = ({ navigation }) => {
+
+  const navigateToSearch = () => {
+    navigation.navigate("Search")
+  }
+
   const navigateMessage = () => {
     navigation.navigate("Message");
   };
@@ -82,8 +87,8 @@ const Home = ({ navigation }) => {
           <Text></Text>
         </TouchableHighlight>
         <View style={{ flexDirection: "row", left: 140 }}>
-          <TouchableOpacity>
-            <Icons name="videocam" size={25} style={{ flexDirection: "row" }} />
+          <TouchableOpacity onPress={navigateToSearch}>
+            <Icons name="search" size={25} style={{ flexDirection: "row" }} />
           </TouchableOpacity>
           <TouchableOpacity style={{ marginLeft: 20 }}>
             <Icons name="add" size={25} style={{ flexDirection: "row" }} />

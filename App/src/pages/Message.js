@@ -74,7 +74,6 @@ const Message = ({ isLeft, item }) => {
 					time={item.time}
 					isLeft={item.id !== id.current}
 					message={item.Description}
-					// onSwipe={onSwipeToReply}
 				/>
 			))}
       

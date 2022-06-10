@@ -16,7 +16,9 @@ import data from "../Data/data";
 import Icons from "react-native-vector-icons/Ionicons";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation,item2 }) => {
+
+  // const {name} = route.params;
 
   const navigateToSearch = () => {
     navigation.navigate("Search")
@@ -87,7 +89,7 @@ const Home = ({ navigation }) => {
           <Text></Text>
         </TouchableHighlight>
         <View style={{ flexDirection: "row", left: 140 }}>
-          <TouchableOpacity onPress={navigateToSearch}>
+          <TouchableOpacity onPress={()=>navigateToSearch()}>
             <Icons name="search" size={25} style={{ flexDirection: "row" }} />
           </TouchableOpacity>
           <TouchableOpacity style={{ marginLeft: 20 }}>

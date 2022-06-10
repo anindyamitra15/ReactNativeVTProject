@@ -81,7 +81,9 @@ const Tabs=() => {
 }
 
 
-const App = () => {
+const App = ({item}) => {
+  // const {userName} = route.params;
+
   const Stack = createNativeStackNavigator();
   return (
     <>
@@ -97,7 +99,8 @@ const App = () => {
             name="Message"
             component={Message}
             options={{
-              headerTitle: "hifh",
+              
+              headerTitle:"Name",
               headerRight: () => (
                 <View
                   style={{
@@ -106,14 +109,14 @@ const App = () => {
                     alignItems: "center",
                   }}
                 >
-                  <TouchableOpacity style={{ right: 10 }}>
+                  <TouchableOpacity style={{ right: 15 }}>
                     <Ionicons
                       name="call"
                       size={24}
                       style={{ flexDirection: "row", color: "black" }}
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity style={{left:5}}>
                     <Icons
                       name="dots-vertical"
                       size={27}

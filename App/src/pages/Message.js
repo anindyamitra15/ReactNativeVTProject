@@ -1,15 +1,29 @@
-import { StyleSheet, Text, View, ScrollView, Dimensions,TouchableOpacity , TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+  TextInput,
+  Platform,
+} from "react-native";
 import React, { useRef, useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import config from "../../environment/environment";
 import { Button } from "react-native-elements";
 import Icons from "react-native-vector-icons/Ionicons";
-import Entypo from "react-native-vector-icons/Entypo";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import data from "../Data/data"
+import MessageList from "../components/MessageList";
 
-const Message = () => {
-  const [chat, setChat] = useState();
-  const socketRef = useRef();
+const Message = ({ isLeft, item }) => {
+
   
+  const [chat, setChat] = useState();
+  const [message, setMessage] = useState("");
+
+  const socketRef = useRef();
 
   useEffect(() => {
     socketRef.current = io(`${config.api.base_uri}`);
@@ -29,69 +43,79 @@ const Message = () => {
   //   socketRef.current.io.emit("storeClientInfo", "rn client");
   // }}
 
+  const isOnLeft = (type) => {
+    if (isLeft && type === "messageContainer") {
+      return {
+        alignSelf: "flex-start",
+        backgroundColor: "#f0f0f0",
+        borderTopLeftRadius: 0,
+      };
+    } else if (isLeft && type === "message") {
+      return {
+        color: "#000",
+      };
+    } else if (isLeft && type === "time") {
+      return {
+        color: "darkgray",
+      };
+    } else {
+      return {
+        borderTopRightRadius: 0,
+      };
+    }
+  };
+
   return (
     <View style={styles.maincontainer}>
-      <ScrollView>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-        <Text>hello</Text>
-      </ScrollView>
+      <ScrollView style={{ paddingVertical: 10, marginVertical: 5 ,flex:1}}>
+      {data.map((item, id) => (
+				<MessageList
+					key={id}
+					time={item.time}
+					isLeft={item.id !== id.current}
+					message={item.Description}
+					// onSwipe={onSwipeToReply}
+				/>
+			))}
       
-      <View style={styles.contentcontainer}>
-      <View style={{padding:20, backgroundColor:"white" , flexDirection: "row" , alignItems:"center" , borderRadius:30,elevation:5}}>
-      <TouchableOpacity style={{ }}>
-            <Icons
-              name="mic"
-              size={27}
-              style={{ flexDirection: "row", color: "gray" }}
-            />
-          </TouchableOpacity>
-          <View style={{paddingRight:0}}>
-        <TextInput
-        style={styles.textInput}
-        placeholder="hello"
-        // numberOfLines={5}
-        multiline={true}
-        />
-        {/* Ui problem here icons are moving towards right on typing */}
-        </View>
-        <View style={{flexDirection: "row", flex:1,justifyContent:"space-around"}}>
-          <TouchableOpacity style={{}}>
-            <Icons
-              name="ios-images-outline"
-              size={27}
-              style={{ flexDirection: "row", color: "gray" }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={{  }}>
-            <Entypo
-              name="attachment"
-              size={27}
-              style={{ flexDirection: "row", color: "gray" }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={{  }}>
-            <Icons
-              name="send"
-              size={27}
-              style={{ flexDirection: "row", color: "green" }}
-            />
-          </TouchableOpacity>
-          </View>
-        {/* <Text>hello</Text> */}
-      </View>
-      </View>
+      </ScrollView>
 
-   
+      <View style={styles.innerContainer}>
+        <View style={styles.inputAndMicrophone}>
+          <TouchableOpacity
+            style={styles.emoticonButton}
+            // onPress={}
+          >
+            <Icon
+              name={"emoticon-outline"}
+              size={23}
+              // color={theme.colors.description}
+            />
+          </TouchableOpacity>
+          <TextInput
+            multiline
+            placeholder={"Type something..."}
+            style={styles.input}
+            // value={message}
+            onChangeText={(text) => setMessage(text)}
+          />
+
+          <TouchableOpacity style={styles.rightIconButtonStyle}>
+            <Icon
+              name="camera"
+              size={23}
+              // color={theme.colors.description}
+            />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.sendButton}>
+          <Icon
+            name={message ? "send" : "microphone"}
+            size={23}
+            // color={theme.colors.white}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -102,16 +126,67 @@ const styles = StyleSheet.create({
   maincontainer: {
     backgroundColor: "pink",
     // width: Dimensions.get("window").width,
-    display: "flex",
+    // display: "flex",
+    flex: 1,
   },
-  contentcontainer:{
-    
+  container: {
+    justifyContent: "center",
+    // backgroundColor: theme.colors.white,
   },
-  textInput:{
-    fontSize: 17,
-    color: "black",
-    marginLeft:15,
-    textAlignVertical: 'top',
-    marginRight:150
-  }
+  
+  innerContainer: {
+    paddingHorizontal: 10,
+    // marginHorizontal: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+    paddingVertical: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    width: "100%",
+  },
+  inputAndMicrophone: {
+    flexDirection: "row",
+    // backgroundColor: theme.colors.inputBackground,
+    flex: 3,
+    marginRight: 10,
+    paddingVertical: Platform.OS === "ios" ? 10 : 0,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  input: {
+    backgroundColor: "transparent",
+    paddingLeft: 20,
+    // color: theme.colors.inputText,
+    flex: 3,
+    fontSize: 15,
+    height: 50,
+    alignSelf: "center",
+  },
+  rightIconButtonStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingRight: 15,
+    paddingLeft: 10,
+    borderLeftWidth: 1,
+    borderLeftColor: "#fff",
+  },
+ 
+  emoticonButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingLeft: 10,
+  },
+  
+  
+  sendButton: {
+    // backgroundColor: theme.colors.primary,
+    borderRadius: 50,
+    height: 50,
+    width: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
 });

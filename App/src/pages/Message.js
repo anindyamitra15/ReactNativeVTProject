@@ -74,6 +74,7 @@ const Message = ({ isLeft, item }) => {
 					time={item.time}
 					isLeft={item.id !== id.current}
 					message={item.Description}
+
 				/>
 			))}
       
@@ -83,19 +84,17 @@ const Message = ({ isLeft, item }) => {
         <View style={styles.inputAndMicrophone}>
           <TouchableOpacity
             style={styles.emoticonButton}
-            // onPress={}
           >
             <Icon
               name={"emoticon-outline"}
               size={23}
-              // color={theme.colors.description}
             />
           </TouchableOpacity>
           <TextInput
             multiline
             placeholder={"Type something..."}
             style={styles.input}
-            // value={message}
+            value={message}
             onChangeText={(text) => setMessage(text)}
           />
 
@@ -103,7 +102,6 @@ const Message = ({ isLeft, item }) => {
             <Icon
               name="camera"
               size={23}
-              // color={theme.colors.description}
             />
           </TouchableOpacity>
         </View>
@@ -111,7 +109,6 @@ const Message = ({ isLeft, item }) => {
           <Icon
             name={message ? "send" : "microphone"}
             size={23}
-            // color={theme.colors.white}
           />
         </TouchableOpacity>
       </View>
@@ -130,7 +127,6 @@ const styles = StyleSheet.create({
   },
   container: {
     justifyContent: "center",
-    // backgroundColor: theme.colors.white,
   },
   
   innerContainer: {
@@ -146,7 +142,6 @@ const styles = StyleSheet.create({
   },
   inputAndMicrophone: {
     flexDirection: "row",
-    // backgroundColor: theme.colors.inputBackground,
     flex: 3,
     marginRight: 10,
     paddingVertical: Platform.OS === "ios" ? 10 : 0,
@@ -157,7 +152,6 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "transparent",
     paddingLeft: 20,
-    // color: theme.colors.inputText,
     flex: 3,
     fontSize: 15,
     height: 50,
@@ -180,7 +174,6 @@ const styles = StyleSheet.create({
   
   
   sendButton: {
-    // backgroundColor: theme.colors.primary,
     borderRadius: 50,
     height: 50,
     width: 50,

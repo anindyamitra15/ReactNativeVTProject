@@ -41,9 +41,7 @@ const CreateAcc = ({ navigation }) => {
     }
 
     // if all fields are valid
-    try {
-      const data = await login(name, phone);
-    } catch (error) {}
+    
 
     ToastAndroid.show(
       `Account Created for ${data.user.name}`,

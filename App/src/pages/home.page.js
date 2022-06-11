@@ -16,23 +16,25 @@ import data from "../Data/data";
 import Icons from "react-native-vector-icons/Ionicons";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
-const Home = ({ navigation,item2 }) => {
-
+const Home = ({ navigation, item2, updateName }) => {
   // const {name} = route.params;
 
   const navigateToSearch = () => {
-    navigation.navigate("Search")
-  }
+    navigation.navigate("Search");
+  };
 
-  const navigateMessage = () => {
+  const navigateMessage = (item) => {
     navigation.navigate("Message");
+    updateName(item.Name);
   };
 
   const chatScreen = ({ item }) => {
     return (
       <View style={styles.container}>
         <View>
-          <TouchableOpacity onPress={navigateMessage}>
+          <TouchableOpacity
+            onPress={() => navigateMessage(item)}
+          >
             <View style={styles.boxHeader}>
               <Image style={styles.tinyLogo} source={{ uri: item.Image }} />
               <Text style={styles.header2}>{item.Name}</Text>
@@ -89,7 +91,7 @@ const Home = ({ navigation,item2 }) => {
           <Text></Text>
         </TouchableHighlight>
         <View style={{ flexDirection: "row", left: 140 }}>
-          <TouchableOpacity onPress={()=>navigateToSearch()}>
+          <TouchableOpacity onPress={() => navigateToSearch()}>
             <Icons name="search" size={25} style={{ flexDirection: "row" }} />
           </TouchableOpacity>
           <TouchableOpacity style={{ marginLeft: 20 }}>
@@ -127,8 +129,7 @@ const styles = StyleSheet.create({
     borderColor: "#8A9DA4",
     paddingHorizontal: 15,
     // paddingTop:28,
-    marginBottom:-3
-
+    marginBottom: -3,
   },
   chatScreen: {
     // backgroundColor: 'white',

@@ -7,6 +7,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { login } from "../services/user.api.service";
 
@@ -21,7 +22,13 @@ const Login = ({ navigation }) => {
   const submit = async () => {
     try {
       const data = await login(name, phone);
-    } catch (error) {}
+      
+      ToastAndroid.show("Logging in", ToastAndroid.SHORT);
+      
+
+    } catch (error) {
+      ToastAndroid.show(error, ToastAndroid.SHORT);
+    }
   };
 
   return (

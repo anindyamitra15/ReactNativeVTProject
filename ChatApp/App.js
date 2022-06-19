@@ -64,17 +64,11 @@ const Tabs = ({updateUserName}) => {
             // backgroundColor: "gray"
           },
         })}
-        tabBarOptions={{
-          activeTintColor: "#416EE7",
-          inactiveTintColor: "gray",
-          showLabel: false,
-        }}
+       
       >
         <Tab.Screen
           name="Home2"
-          component={(props) => (
-            <Home {...props} updateName={(name) => setName(name)} />
-          )}
+          component={Home}
           options={{ headerShown: false }}
         />
         <Tab.Screen name="Search" component={SearchPage} />
@@ -102,9 +96,7 @@ const App = ({ item }) => {
           <Stack.Screen
             name="Home"
             options={{ headerShown: false }}
-            component={(props) => (
-              <Tabs {...props} updateUserName={(name) => setUserName(name)} />
-            )}
+            component={Tabs}
           />
 
           <Stack.Screen

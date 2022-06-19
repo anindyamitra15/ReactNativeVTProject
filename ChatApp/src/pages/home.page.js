@@ -16,26 +16,23 @@ import data from "../Data/data";
 import Icons from "react-native-vector-icons/Ionicons";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
-const Home = ({ navigation, item2, updateName }) => {
+const Home = ({ navigation, item2 }) => {
   // const {name} = route.params;
   //hello
-  
+
   const navigateToSearch = () => {
     navigation.navigate("Search");
   };
 
   const navigateMessage = (item) => {
     navigation.navigate("Message");
-    updateName(item.Name);
   };
 
   const chatScreen = ({ item }) => {
     return (
       <View style={styles.container}>
         <View>
-          <TouchableOpacity
-            onPress={() => navigateMessage(item)}
-          >
+          <TouchableOpacity onPress={() => navigateMessage(item)}>
             <View style={styles.boxHeader}>
               <Image style={styles.tinyLogo} source={{ uri: item.Image }} />
               <Text style={styles.header2}>{item.Name}</Text>

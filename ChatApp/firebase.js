@@ -8,7 +8,14 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { getFirestore ,doc,setDoc} from "firebase/firestore";
+
+import firestore, {
+  getFirestore,
+  doc,
+  setDoc,
+  collection,
+  useCollectionData,
+} from "firebase/firestore";
 import { ToastAndroid } from "react-native";
 // import 'firebase/auth';
 
@@ -28,34 +35,48 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
 
-export const signUp=(email, password,name,phone)=> {
-  return (
-    createUserWithEmailAndPassword(auth, email, password,name,phone)
-    .then(() => {
-    ToastAndroid.show("Account Created", ToastAndroid.SHORT)
-    const myDoc = doc(db,"MyCollection","MyDocument")
+export const signUp = async (email, password, name, phone) => {
+  try {
+    const credential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+      name,
+      phone
+    );
+    ToastAndroid.show(`Account for ${name} created`, ToastAndroid.SHORT);
 
-    const docData={
-      "name":name,
-      "email":email,
-      "password":password,
-      "phone":phone
-    }
-    setDoc(myDoc, docData)
-    .then(() => {console.log("success")})
-    .catch(err =>console.log(err))
+    await setDoc(doc(db, "users", credential.user.uid), {
+      name: name,
+      email: email,
+      phone: phone,
+    });
 
-    }
-    )
-    .catch((e)=>ToastAndroid.show("error"+e.message, ToastAndroid.SHORT))
-  )
-}
+    ToastAndroid.show(`${name}'s database updated`, ToastAndroid.SHORT);
+  } catch (error) {
+    throw error;
+  }
 
-export const login=(email, password) =>{
-  return(
-    signInWithEmailAndPassword(auth,email, password)
-    .then(() => ToastAndroid.show("logged in successfully", ToastAndroid.SHORT))
-    .catch((e)=>ToastAndroid.show("error"+e.message, ToastAndroid.SHORT))
+  // return createUserWithEmailAndPassword(auth, email, password, name, phone)
+  //   .then(() => {
+  //     ToastAndroid.show("Account Created", ToastAndroid.SHORT);
+  //     const myDoc = doc(db, "MyCollection", "MyDocument");
 
-  )
-}
+  //     const docData = {
+  //       name: name,
+  //       email: email,
+  //       password: password,
+  //       phone: phone,
+  //     };
+  //     setDoc(myDoc, docData)
+  //       .then(() => {
+  //         console.log("success");
+  //       })
+  //       .catch((err) => console.log(err));
+  //   })
+  //   .catch((e) => ToastAndroid.show("error" + e.message, ToastAndroid.SHORT));
+};
+
+export const signIn = (email = "", password = "") => {
+  return signInWithEmailAndPassword(auth, email, password);
+};

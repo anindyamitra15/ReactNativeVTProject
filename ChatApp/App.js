@@ -1,6 +1,5 @@
 
 
-import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
 import Home from "./src/pages/home.page";
@@ -9,21 +8,16 @@ import Message from "./src/pages/Message";
 import SearchPage from "./src/pages/SearchPage";
 import CreateAcc from "./src/pages/CreateAcc";
 import SplashScreen from "./src/pages/SplashScreen";
-import Data from "./src/Data/data";
 // import TopUi from "./src/components/TopUi";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import firebase from "../ChatApp/firebase"
 
 const Tab = createBottomTabNavigator();
 
-const Tabs = ({updateUserName}) => {
-  const setName = (name) => {
-    updateUserName(name);
-  };
+const Tabs = () => {
   return (
     <>
       <Tab.Navigator
@@ -84,9 +78,8 @@ const Tabs = ({updateUserName}) => {
   );
 };
 
-const App = ({ item }) => {
+const App = () => {
   // const {userName} = route.params;
-  const [UserName, setUserName] = useState("");
 
   const Stack = createNativeStackNavigator();
   return (
@@ -103,7 +96,7 @@ const App = ({ item }) => {
             name="Message"
             component={Message}
             options={{
-              headerTitle: `${UserName}`,
+              headerTitle: `${'Message'}`,
               headerRight: () => (
                 <View
                   style={{

@@ -3,8 +3,6 @@ import {
   Text,
   View,
   ScrollView,
-  Image,
-  ImageBackground,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -26,32 +24,27 @@ const CreateAcc = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-      await signUp(email, password, name, phone).then(() => {
-        navigation.replace("Home");
-        console.log('created dir ' + name);
-      })
-      .catch((err) =>console.log(err));
-    } catch {
-      (e) => ToastAndroid.show("Errors" + e, ToastAndroid.SHORT);
-    }
-  };
-
-  const check = () => {
-    if (toggleCheckBox === true) {
-      setToggleCheckBox(false);
-    } else {
-      setToggleCheckBox(true);
+      await signUp(email, password, name, phone);
+      navigation.replace("Home");
+      // console.log("created dir " + name);
+    } catch (error) {
+      console.log(error);
+      if(error.code === "auth/email-already-in-use") {
+        ToastAndroid.show("Email already exists, try signing in", ToastAndroid.SHORT);
+        navigation.navigate("Login");
+      }
+      else ToastAndroid.show("Errors" + error, ToastAndroid.SHORT);
     }
   };
 
   const submit = async () => {
     if (!name || !email || !phone || !password) {
-      //   Alert.alert("please fill up every fields")
       return ToastAndroid.show(
         "please fill up every fields",
         ToastAndroid.SHORT
       );
     }
+
     if (password !== confirmPass) {
       return ToastAndroid.show(
         "password and confirm password must be same",
@@ -60,12 +53,7 @@ const CreateAcc = ({ navigation }) => {
     }
 
     // if all fields are valid
-    handleSignup()
-    
-
-    //   createId();
-    // navigation.navigate("Home");
-    // console.log(name,password)
+    handleSignup();
   };
 
   return (
@@ -78,26 +66,18 @@ const CreateAcc = ({ navigation }) => {
       </View>
 
       <View style={styles.CreateAcc}>
-        <Text style={styles.header}>Create An Account</Text>
-        <Text
-          style={{ color: "gray", fontSize: 15, textAlign: "center", top: 10 }}
-        >
-          Begin Your New Journey With Us
-        </Text>
+        <Text style={styles.header}>Create Account</Text>
+        <Text style={styles.caption}>Begin Your New Journey With Us</Text>
 
         <View style={{ paddingHorizontal: 20, top: 30 }}>
-          <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
-            Enter your name
-          </Text>
+          <Text style={styles.label}>Enter your name</Text>
           <TextInput
             style={styles.textinput}
             placeholder="Enter name"
             value={name}
             onChangeText={(userData) => setName(userData)}
           />
-          <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
-            Enter your email
-          </Text>
+          <Text style={styles.label}>Enter your email</Text>
           <TextInput
             style={styles.textinput}
             placeholder="email@gmail.com"
@@ -114,9 +94,7 @@ const CreateAcc = ({ navigation }) => {
             onChangeText={(userData) => setPhone(userData)}
             keyboardType="phone-pad"
           />
-          <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
-            Create Password
-          </Text>
+          <Text style={styles.label}>Create Password</Text>
           <TextInput
             style={styles.textinput}
             placeholder="@1234567"
@@ -124,9 +102,7 @@ const CreateAcc = ({ navigation }) => {
             onChangeText={(userData) => setPassword(userData)}
             secureTextEntry
           />
-          <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
-            Confirm Password
-          </Text>
+          <Text style={styles.label}>Confirm Password</Text>
           <TextInput
             style={styles.textinput}
             placeholder="Confirm it"
@@ -142,8 +118,9 @@ const CreateAcc = ({ navigation }) => {
               //   checkedIcon="clear"
               checkedColor="#416EE7"
               checked={toggleCheckBox}
-              //   onValueChange={(newValue) => setToggleCheckBox(newValue)}
-              onPress={() => check(toggleCheckBox)}
+              onPress={() => {
+                setToggleCheckBox(!toggleCheckBox);
+              }}
             />
             <Text style={styles.wrapperText}>
               I have read and agreed to all the terms and conditions
@@ -179,7 +156,6 @@ const CreateAcc = ({ navigation }) => {
 
       <View style={{ paddingLeft: 280 }}>
         <View style={styles.BottomStyle}>
-          <Text></Text>
         </View>
       </View>
     </ScrollView>
@@ -215,6 +191,17 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 35,
     fontWeight: "bold",
+  },
+  caption: {
+    color: "gray",
+    fontSize: 15,
+    textAlign: "center",
+    top: 10,
+  },
+  label: {
+    color: "black",
+    fontSize: 17,
+    marginBottom: 10,
   },
   textinput: {
     borderColor: "black",

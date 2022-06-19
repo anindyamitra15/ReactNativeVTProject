@@ -10,128 +10,98 @@ import {
   ToastAndroid,
 } from "react-native";
 // import { login } from "../services/user.api.service";
-import { login } from "../../firebase";
+import { signIn } from "../../firebase";
 
 const Login = ({ navigation }) => {
+  //states for login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigateToCreate = () => {
+  const navigateToSignUp = () => {
     navigation.navigate("Create");
   };
 
-  const logIn= async ()=>{
-    try{
-
-      await login(email,password)
-    } catch {
-      (e) => ToastAndroid.show("Errors" + e, ToastAndroid.SHORT);
-    }
-  }
-
   const submit = async () => {
-      // const data = await login(name, phone);
-      logIn()
-      navigation.replace("Home")
-    
+    try {
+      await signIn(email, password);
+
+      ToastAndroid.show("Signed In Successfully", ToastAndroid.SHORT);
+
+      navigation.replace("Home");
+    } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        navigateToSignUp();
+        ToastAndroid.show(
+          "User not found, please sign up...",
+          ToastAndroid.SHORT
+        );
+      } else if (error.code === "auth/invalid-email") {
+        ToastAndroid.show(
+          "please fill up every fields properly",
+          ToastAndroid.SHORT
+        );
+      } else if (error.code === "auth/internal-error") {
+        //TODO: check if this error case is correct
+        ToastAndroid.show("Wrong credentials..", ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show("Errors" + error, ToastAndroid.SHORT);
+      }
+    }
   };
 
   return (
     <ScrollView>
-      {/* <Text>Login</Text> */}
       <ImageBackground
         source={require("../assets/asset.png")}
         style={styles.background}
       >
         <View style={styles.header}>
           <Text style={styles.headerText}>Hello There!</Text>
-          <Text style={{ fontSize: 20, color: "#C4C4C6", marginTop: 10 }}>
-            Nice to meet you again
-          </Text>
+
+          <Text style={styles.caption}>Nice to see you again!</Text>
         </View>
       </ImageBackground>
+
       <View style={styles.login}>
-        <View style={{}}>
-          <Text
-            style={{
-              marginTop: 30,
-              fontSize: 30,
-              fontWeight: "bold",
-              left: 30,
-              elevation: 5,
-            }}
-          >
-            Login here
-          </Text>
-          <View style={{ paddingHorizontal: 30, marginTop: 15 }}>
-            <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
-              Username
-            </Text>
+        <View style={styles.paddedForm}>
+          <Text style={styles.signInText}>Sign In</Text>
+          <View style={{}}>
+            <Text style={styles.label}>Email ID</Text>
+
             <TextInput
               style={styles.textinput}
-              placeholder="Enter Username"
+              placeholder="Enter your email"
+              keyboardType="email-address"
               value={email}
               onChangeText={(userData) => setEmail(userData)}
             />
-            <Text style={{ color: "black", fontSize: 17, marginBottom: 10 }}>
-              Password
-            </Text>
+            <Text style={styles.label}>Password</Text>
             <TextInput
               style={styles.textinput}
               // keyboardType="phone-pad"
-              placeholder="Enter Phone Number"
+              placeholder="Enter your password"
               value={password}
               onChangeText={(userData) => setPassword(userData)}
               secureTextEntry
             />
 
-            <View
-              style={{
-                padding: 0,
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 10,
-              }}
-            >
+            <View style={styles.buttonPill}>
               <View style={styles.button}>
                 <TouchableOpacity styles={styles.loginBtn} onPress={submit}>
-                  <Text
-                    style={{ color: "#fff", fontSize: 20, textAlign: "center" }}
-                  >
-                    Sign in
-                  </Text>
+                  <Text style={styles.signInButtonText}>Sign in</Text>
                 </TouchableOpacity>
               </View>
 
               <TouchableOpacity>
-                <Text
-                  style={{
-                    marginLeft: 110,
-                    color: "blue",
-                    fontSize: 14,
-                    textDecorationLine: "underline",
-                  }}
-                >
-                  Forgot password?
-                </Text>
+                <Text style={styles.googleSignInText}>Google Sign In</Text>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity
-              onPress={navigateToCreate}
+              onPress={navigateToSignUp}
               style={{ paddingBottom: 70 }}
             >
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "blue",
-                  fontSize: 17,
-                  marginTop: 45,
-                  textDecorationLine: "underline",
-                }}
-              >
-                Don't have an account?
-              </Text>
+              <Text style={styles.createAccLink}>Don't have an account?</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -147,6 +117,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     width: "100%",
     height: "100%",
+    opacity: 0.8,
   },
   header: {
     padding: 40,
@@ -159,13 +130,58 @@ const styles = StyleSheet.create({
     marginTop: 60,
     elevation: 5,
   },
+  caption: {
+    fontSize: 20,
+    color: "#fff",
+    marginTop: 10,
+  },
+  signInText: {
+    marginTop: 30,
+    fontSize: 30,
+    fontWeight: "bold",
+    left: 30,
+    elevation: 5,
+  },
+  paddedForm: {
+    paddingHorizontal: 30,
+    marginTop: 15,
+  },
+  label: {
+    color: "black",
+    fontSize: 17,
+    marginVertical: 15,
+  },
+  buttonPill: {
+    padding: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  signInButtonText: {
+    color: "#fff",
+    fontSize: 20,
+    textAlign: "center",
+  },
+  googleSignInText: {
+    marginLeft: 110,
+    color: "blue",
+    fontSize: 17,
+    textDecorationLine: "underline",
+  },
+  createAccLink: {
+    textAlign: "center",
+    color: "blue",
+    fontSize: 17,
+    marginTop: 20,
+    textDecorationLine: "underline",
+  },
   login: {
     backgroundColor: "#fff",
     height: "100%",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     elevation: 5,
-    top: -27,
+    top: -120,
   },
   textinput: {
     borderColor: "black",

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
+  ToastAndroid
 } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
 
@@ -15,6 +16,7 @@ import Icons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import data from "../Data/data"
 import MessageList from "../components/MessageList";
+import { getCurrentUser, signUserOut,auth } from "../../firebase";
 
 const Message = ({ item }) => {
 
@@ -22,13 +24,24 @@ const Message = ({ item }) => {
   const [chat, setChat] = useState();
   const [message, setMessage] = useState("");
 
+  const signout = async () =>{
+    try {
+      await signUserOut().then(() => {ToastAndroid.show("Signed out", ToastAndroid.SHORT)})
+    }
+    catch(error){
+      console.log(error)
+    }
+   }
 
   return (
     <View style={styles.maincontainer}>
       <ScrollView style={{ paddingVertical: 10, marginVertical: 5 ,flex:1}}>
-       
       
       </ScrollView>
+
+       <TouchableOpacity style={{alignItems:"center",justifyContent:"center",top:-100}} onPress={signout}>
+        <Text>Sign Out</Text>
+       </TouchableOpacity>
 
       <View style={styles.innerContainer}>
         <View style={styles.inputAndMicrophone}>

@@ -44,10 +44,10 @@ const App = () => {
   //  console.log(currentUser);
   currentUser()
 
-  const Stack = createNativeStackNavigator();
+  // const Stack = createNativeStackNavigator();
   return (
     <>
-      <NavigationContainer>
+      {/* <NavigationContainer>
         <Stack.Navigator initialRouteName="SplashScreen">
           <Stack.Screen
             name="Message"
@@ -98,7 +98,10 @@ const App = () => {
             component={SplashScreen}
           />
         </Stack.Navigator>
-      </NavigationContainer>
+      </NavigationContainer> */}
+      {getCurrentUser!==null?
+      <Login/>
+      :<Message/>}
     </>
   );
 };

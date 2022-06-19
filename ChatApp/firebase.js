@@ -62,6 +62,10 @@ export function getCurrentUser() {
 }
 
 
-export async function signUserOut() {
-  console.log(await signOut(auth));
+export  function signUserOut() {
+  // console.log(await signOut(auth));
+  return (
+    signOut(auth)
+    // console.log(signOut(auth))
+    )
 }

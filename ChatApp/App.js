@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Button, TouchableOpacity,ToastAndroid } from "react-native";
 import Home from "./src/pages/home.page";
 import Login from "./src/pages/login.page";
 import Message from "./src/pages/Message";
@@ -12,72 +12,38 @@ import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { getCurrentUser, signUserOut } from "./firebase";
+import { getCurrentUser, signUserOut,auth } from "./firebase";
+// import { signUserOut } from "./firebase";
 
-const Tab = createBottomTabNavigator();
-
-const Tabs = () => {
-  return (
-    <>
-      <Tab.Navigator
-        initialRouteName="Message"
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            if (route.name === "Home2") {
-              iconName = focused ? "home" : "home-outline";
-              size = focused ? size + 5 : size;
-            } else if (route.name === "Login") {
-              iconName = focused ? "apps" : "apps-outline";
-              size = focused ? size + 5 : size;
-            } else if (route.name === "Message") {
-              iconName = focused
-                ? "chatbubble-ellipses"
-                : "chatbubble-ellipses-outline";
-              size = focused ? size + 5 : size;
-            } else if (route.name === "Search") {
-              iconName = focused ? "search" : "search-outline";
-              size = focused ? size + 5 : size;
-            } else if (route.name === "Create") {
-              iconName = focused ? "create" : "create-outline";
-              size = focused ? size + 5 : size;
-            }
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarHideOnKeyboard: true,
-          keyboardHide: true,
-          showLabel: false,
-          tabBarStyle: {
-            height: 70,
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-            elevation: 5,
-            // backgroundColor: "gray"
-          },
-        })}
-      >
-        <Tab.Screen
-          name="Home2"
-          component={Home}
-          options={{ headerShown: false }}
-        />
-        <Tab.Screen name="Search" component={SearchPage} />
-        {/* <Tab.Screen name="Message" component={Message} /> */}
-        {/* <Tab.Screen name="Create" component={CreateAcc} options={{headerShown: false}}/> */}
-        <Tab.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-      </Tab.Navigator>
-    </>
-  );
-};
 
 const App = () => {
+
+  // const[isSigned, setIsSigned] = useState()
+
   //TODO: add Message page in the nav. there won't be any chat page, search feature will be removed
+   const signout = async () =>{
+    try {
+      await signUserOut().then(() => {ToastAndroid.show("Signed out", ToastAndroid.SHORT),currentUser() })
+    }
+    catch(error){
+      console.log(error)
+    }
+   }
+
+   var a1=new Boolean();
+   const currentUser = ()=>{
+    if(getCurrentUser!==null){
+      a1=false;
+      console.log(a1)
+    }else{
+      a1=true;
+      console.log(a1)
+    }
+   }
+
+  //  console.log(currentUser);
+  currentUser()
+
   const Stack = createNativeStackNavigator();
   return (
     <>
@@ -86,7 +52,7 @@ const App = () => {
           <Stack.Screen
             name="Message"
             options={{ headerShown: false }}
-            component={Tabs}
+            component={Home}
           />
 
           <Stack.Screen
@@ -104,10 +70,7 @@ const App = () => {
                 >
                   <TouchableOpacity
                     style={{ left: 5 }}
-                    onPress={async () => {
-                      //TODO: navigate to Login from this callback
-                      await signUserOut();
-                    }}
+                   onPress={()=>signout()}
                   >
                     <Icons
                       name="logout"

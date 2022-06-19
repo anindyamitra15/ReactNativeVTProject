@@ -16,51 +16,17 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import data from "../Data/data"
 import MessageList from "../components/MessageList";
 
-const Message = ({ isLeft, item }) => {
+const Message = ({ item }) => {
 
   
   const [chat, setChat] = useState();
   const [message, setMessage] = useState("");
 
 
-  // onPress={() => {
-  //   socketRef.current.io.emit("storeClientInfo", "rn client");
-  // }}
-
-  // const isOnLeft = (type) => {
-  //   if (isLeft && type === "messageContainer") {
-  //     return {
-  //       alignSelf: "flex-start",
-  //       backgroundColor: "#f0f0f0",
-  //       borderTopLeftRadius: 0,
-  //     };
-  //   } else if (isLeft && type === "message") {
-  //     return {
-  //       color: "#000",
-  //     };
-  //   } else if (isLeft && type === "time") {
-  //     return {
-  //       color: "darkgray",
-  //     };
-  //   } else {
-  //     return {
-  //       borderTopRightRadius: 0,
-  //     };
-  //   }
-  // };
-
   return (
     <View style={styles.maincontainer}>
       <ScrollView style={{ paddingVertical: 10, marginVertical: 5 ,flex:1}}>
-      {data.map((item, id) => (
-				<MessageList
-					key={id}
-					time={item.time}
-					isLeft={item.id !== id.current}
-					message={item.Description}
-
-				/>
-			))}
+       
       
       </ScrollView>
 

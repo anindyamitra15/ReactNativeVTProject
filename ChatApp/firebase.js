@@ -5,19 +5,14 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithCredential,
+  signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-import firestore, {
-  getFirestore,
-  doc,
-  setDoc,
-  collection,
-  useCollectionData,
-} from "firebase/firestore";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
 import { ToastAndroid } from "react-native";
-// import 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDl-xX016yxmIC94ED6Tn9rGs9oxZ26vTc",
@@ -56,27 +51,17 @@ export const signUp = async (email, password, name, phone) => {
   } catch (error) {
     throw error;
   }
-
-  // return createUserWithEmailAndPassword(auth, email, password, name, phone)
-  //   .then(() => {
-  //     ToastAndroid.show("Account Created", ToastAndroid.SHORT);
-  //     const myDoc = doc(db, "MyCollection", "MyDocument");
-
-  //     const docData = {
-  //       name: name,
-  //       email: email,
-  //       password: password,
-  //       phone: phone,
-  //     };
-  //     setDoc(myDoc, docData)
-  //       .then(() => {
-  //         console.log("success");
-  //       })
-  //       .catch((err) => console.log(err));
-  //   })
-  //   .catch((e) => ToastAndroid.show("error" + e.message, ToastAndroid.SHORT));
 };
 
-export const signIn = (email = "", password = "") => {
+export const signIn = async (email = "", password = "") => {
   return signInWithEmailAndPassword(auth, email, password);
 };
+
+export function getCurrentUser() {
+  return getAuth().currentUser;
+}
+
+
+export async function signUserOut() {
+  console.log(await signOut(auth));
+}

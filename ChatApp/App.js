@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
 import Home from "./src/pages/home.page";
@@ -14,6 +12,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { getCurrentUser, signUserOut } from "./firebase";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,7 +20,7 @@ const Tabs = () => {
   return (
     <>
       <Tab.Navigator
-        initialRouteName="Home2"
+        initialRouteName="Message"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -58,7 +57,6 @@ const Tabs = () => {
             // backgroundColor: "gray"
           },
         })}
-       
       >
         <Tab.Screen
           name="Home2"
@@ -79,24 +77,23 @@ const Tabs = () => {
 };
 
 const App = () => {
-  // const {userName} = route.params;
-
+  //TODO: add Message page in the nav. there won't be any chat page, search feature will be removed
   const Stack = createNativeStackNavigator();
   return (
     <>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="SplashScreen">
           <Stack.Screen
-            name="Home"
+            name="Message"
             options={{ headerShown: false }}
             component={Tabs}
           />
 
           <Stack.Screen
-            name="Message"
+            name="Home"
             component={Message}
             options={{
-              headerTitle: `${'Message'}`,
+              headerTitle: `${"Message"}`,
               headerRight: () => (
                 <View
                   style={{
@@ -105,16 +102,22 @@ const App = () => {
                     alignItems: "center",
                   }}
                 >
-                  <TouchableOpacity style={{ right: 15 }}>
+                  {/* <TouchableOpacity style={{ right: 15 }}>
                     <Ionicons
                       name="call"
                       size={24}
                       style={{ flexDirection: "row", color: "black" }}
                     />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ left: 5 }}>
+                  </TouchableOpacity> */}
+                  <TouchableOpacity
+                    style={{ left: 5 }}
+                    onPress={async () => {
+                      //TODO: navigate to Login from this callback
+                      await signUserOut();
+                    }}
+                  >
                     <Icons
-                      name="dots-vertical"
+                      name="logout"
                       size={27}
                       style={{ flexDirection: "row", color: "black" }}
                     />
@@ -138,6 +141,11 @@ const App = () => {
             name="Create"
             options={{ headerShown: false }}
             component={CreateAcc}
+          />
+          <Stack.Screen
+            name="Login"
+            options={{ headerShown: false }}
+            component={Login}
           />
           <Stack.Screen
             name="SplashScreen"

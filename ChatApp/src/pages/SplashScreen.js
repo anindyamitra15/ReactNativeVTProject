@@ -1,21 +1,22 @@
-import { ImageBackground, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { getCurrentUser } from "../../firebase";
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({ navigation }) => {
   setTimeout(() => {
-      navigation.replace('Home')
-  },900)
-    return (
+    if (getCurrentUser()?.uid) navigation.replace("Home");
+    else navigation.replace("Login");
+  }, 900);
+  return (
     // <View>
-      <ImageBackground style={{flex:1 , height:"100%", width:"100%",}} source={require('../assets/splashScreen.jpg')}>
-
-      </ImageBackground>
+    <ImageBackground
+      style={{ flex: 1, height: "100%", width: "100%" }}
+      source={require("../assets/splashScreen.jpg")}
+    ></ImageBackground>
     // </View>
-  )
-}
+  );
+};
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({});
 
-})
-
-export default SplashScreen
+export default SplashScreen;

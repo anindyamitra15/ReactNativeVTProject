@@ -25,13 +25,13 @@ const CreateAcc = ({ navigation }) => {
   const handleSignup = async () => {
     try {
       await signUp(email, password, name, phone);
-      navigation.replace("Home");
+      navigation.replace("Message");
       // console.log("created dir " + name);
     } catch (error) {
       console.log(error);
       if(error.code === "auth/email-already-in-use") {
         ToastAndroid.show("Email already exists, try signing in", ToastAndroid.SHORT);
-        navigation.navigate("Login");
+        navigation.navigate("SignIn");
       }
       else ToastAndroid.show("Errors" + error, ToastAndroid.SHORT);
     }
@@ -97,7 +97,7 @@ const CreateAcc = ({ navigation }) => {
           <Text style={styles.label}>Create Password</Text>
           <TextInput
             style={styles.textinput}
-            placeholder="@1234567"
+            placeholder="At least 6 characters"
             value={password}
             onChangeText={(userData) => setPassword(userData)}
             secureTextEntry

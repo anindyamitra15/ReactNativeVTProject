@@ -7,51 +7,48 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
-  ToastAndroid
+  ToastAndroid,
 } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
 
 import { Button } from "react-native-elements";
 import Icons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import data from "../Data/data"
+import data from "../Data/data";
 import MessageList from "../components/MessageList";
-import { getCurrentUser, signUserOut,auth } from "../../firebase";
+import { getCurrentUser, signUserOut, auth } from "../../firebase";
 
-const Message = ({ item }) => {
-
-  
+const Message = ({ navigation }) => {
   const [chat, setChat] = useState();
   const [message, setMessage] = useState("");
 
-  const signout = async () =>{
+  const signout = async () => {
     try {
-      await signUserOut().then(() => {ToastAndroid.show("Signed out", ToastAndroid.SHORT)})
+      await signUserOut();
+      ToastAndroid.show("Signed out", ToastAndroid.SHORT);
+      navigation.replace("SignIn");
+    } catch (error) {
+      console.log(error);
     }
-    catch(error){
-      console.log(error)
-    }
-   }
+  };
 
   return (
     <View style={styles.maincontainer}>
-      <ScrollView style={{ paddingVertical: 10, marginVertical: 5 ,flex:1}}>
-      
-      </ScrollView>
+      <ScrollView
+        style={{ paddingVertical: 10, marginVertical: 5, flex: 1 }}
+      ></ScrollView>
 
-       <TouchableOpacity style={{alignItems:"center",justifyContent:"center",top:-100}} onPress={signout}>
+      <TouchableOpacity
+        style={{ alignItems: "center", justifyContent: "center", top: -100 }}
+        onPress={signout}
+      >
         <Text>Sign Out</Text>
-       </TouchableOpacity>
+      </TouchableOpacity>
 
       <View style={styles.innerContainer}>
         <View style={styles.inputAndMicrophone}>
-          <TouchableOpacity
-            style={styles.emoticonButton}
-          >
-            <Icon
-              name={"emoticon-outline"}
-              size={23}
-            />
+          <TouchableOpacity style={styles.emoticonButton}>
+            <Icon name={"emoticon-outline"} size={23} />
           </TouchableOpacity>
           <TextInput
             multiline
@@ -62,17 +59,11 @@ const Message = ({ item }) => {
           />
 
           <TouchableOpacity style={styles.rightIconButtonStyle}>
-            <Icon
-              name="camera"
-              size={23}
-            />
+            <Icon name="camera" size={23} />
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.sendButton}>
-          <Icon
-            name={message ? "send" : "microphone"}
-            size={23}
-          />
+          <Icon name={message ? "send" : "microphone"} size={23} />
         </TouchableOpacity>
       </View>
     </View>
@@ -91,7 +82,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
   },
-  
+
   innerContainer: {
     paddingHorizontal: 10,
     // marginHorizontal: 10,
@@ -128,14 +119,13 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderLeftColor: "#fff",
   },
- 
+
   emoticonButton: {
     justifyContent: "center",
     alignItems: "center",
     paddingLeft: 10,
   },
-  
-  
+
   sendButton: {
     borderRadius: 50,
     height: 50,
@@ -143,5 +133,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  
 });

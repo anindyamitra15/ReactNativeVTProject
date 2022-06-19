@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from "react-native";
-// import { login } from "../services/user.api.service";
 import { signIn } from "../../firebase";
 
 const Login = ({ navigation }) => {
@@ -17,20 +16,16 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigateToSignUp = () => {
-    navigation.navigate("Create");
-  };
-
   const submit = async () => {
     try {
       await signIn(email, password);
 
       ToastAndroid.show("Signed In Successfully", ToastAndroid.SHORT);
 
-      navigation.replace("Home");
+      navigation.replace("Message");
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        navigateToSignUp();
+        navigation.navigate("SignUp");
         ToastAndroid.show(
           "User not found, please sign up...",
           ToastAndroid.SHORT
@@ -40,7 +35,10 @@ const Login = ({ navigation }) => {
           "please fill up every fields properly",
           ToastAndroid.SHORT
         );
-      } else if (error.code === "auth/internal-error") {
+      } else if (
+        error.code === "auth/internal-error" ||
+        error.code === "auth/wrong-password"
+      ) {
         //TODO: check if this error case is correct
         ToastAndroid.show("Wrong credentials..", ToastAndroid.SHORT);
       } else {
@@ -98,7 +96,9 @@ const Login = ({ navigation }) => {
             </View>
 
             <TouchableOpacity
-              onPress={navigateToSignUp}
+              onPress={() => {
+                navigation.navigate("SignUp");
+              }}
               style={{ paddingBottom: 70 }}
             >
               <Text style={styles.createAccLink}>Don't have an account?</Text>

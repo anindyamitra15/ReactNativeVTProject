@@ -5,8 +5,8 @@ import { getCurrentUser } from "../../firebase";
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
-      if (getCurrentUser()?.uid) navigation.replace("Home");
-      else navigation.replace("Login");
+      if (getCurrentUser()?.uid) navigation.replace("Message");
+      else navigation.replace("SignIn");
     }, 900);
     return () => {};
   }, []);

@@ -1,12 +1,16 @@
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { getCurrentUser } from "../../firebase";
 
 const SplashScreen = ({ navigation }) => {
-  setTimeout(() => {
-    if (getCurrentUser()?.uid) navigation.replace("Home");
-    else navigation.replace("Login");
-  }, 900);
+  useEffect(() => {
+    setTimeout(() => {
+      if (getCurrentUser()?.uid) navigation.replace("Home");
+      else navigation.replace("Login");
+    }, 900);
+    return () => {};
+  }, []);
+
   return (
     // <View>
     <ImageBackground

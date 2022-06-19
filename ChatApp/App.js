@@ -102,13 +102,6 @@ const App = () => {
                     alignItems: "center",
                   }}
                 >
-                  {/* <TouchableOpacity style={{ right: 15 }}>
-                    <Ionicons
-                      name="call"
-                      size={24}
-                      style={{ flexDirection: "row", color: "black" }}
-                    />
-                  </TouchableOpacity> */}
                   <TouchableOpacity
                     style={{ left: 5 }}
                     onPress={async () => {
@@ -126,17 +119,6 @@ const App = () => {
               ),
             }}
           />
-
-          {/* <Stack.Screen
-            name="Search"
-            // options={{ headerShown: false }}
-            component={SearchPage}
-          /> */}
-          {/* <Stack.Screen
-            name="Login"
-            options={{ headerShown: false }}
-            component={Login}
-          /> */}
           <Stack.Screen
             name="Create"
             options={{ headerShown: false }}

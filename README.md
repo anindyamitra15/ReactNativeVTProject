@@ -2,8 +2,6 @@
 
 This is our chat application project for the vocational training under Ardent.
 
-For the backend section, credit goes to Ayush for his [backend repository](https://github.com/singhayushh/chatserver-backend)
-
 ## Members
 - Anindya Kanti Mitra @anindyamitra15
 - Aryan Shaw @Aryanshaw
@@ -13,7 +11,7 @@ For the backend section, credit goes to Ayush for his [backend repository](https
 ## Project Contents
 ```
 ./
- |-   App - our React Native App Source Code
+ |-   ChatApp - our React Native App Source Code
  |-   README
 ```
 
@@ -21,8 +19,9 @@ For the backend section, credit goes to Ayush for his [backend repository](https
 
 ## Tech Stacks
 - React Native
-- Socket.io
+- React Native Firebase SDK
+- Firebase Authentication
+- Firebase Firestore
 - Expo CLI
 - Node JS 
 
-## Credits

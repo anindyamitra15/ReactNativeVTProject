@@ -31,7 +31,7 @@ const CreateAcc = ({ navigation }) => {
       console.log(error);
       if(error.code === "auth/email-already-in-use") {
         ToastAndroid.show("Email already exists, try signing in", ToastAndroid.SHORT);
-        navigation.navigate("SignIn");
+        navigation.replace("SignIn");
       }
       else ToastAndroid.show("Errors" + error, ToastAndroid.SHORT);
     }

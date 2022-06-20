@@ -25,7 +25,7 @@ const Login = ({ navigation }) => {
       navigation.replace("Message");
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        navigation.navigate("SignUp");
+        navigation.replace("SignUp");
         ToastAndroid.show(
           "User not found, please sign up...",
           ToastAndroid.SHORT
@@ -96,7 +96,7 @@ const Login = ({ navigation }) => {
 
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("SignUp");
+                navigation.replace("SignUp");
               }}
               style={{ paddingBottom: 70 }}
             >

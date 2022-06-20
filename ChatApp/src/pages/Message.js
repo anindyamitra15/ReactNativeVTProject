@@ -10,22 +10,58 @@ import {
   ToastAndroid,
   TouchableHighlight,
 } from "react-native";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button } from "react-native-elements";
 // import Icons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import data from "../Data/data";
 import MessageList from "../components/MessageList";
-import { getCurrentUser, signUserOut, auth, getMessages } from "../../firebase";
-import Icons from "react-native-vector-icons/Ionicons";
+import {
+  getCurrentUser,
+  signUserOut,
+  auth,
+  getMessages,
+  messageRef,
+  getServerTimestamp,
+} from "../../firebase";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
-const Message = ({ navigation, time, isLeft, messageing }) => {
-  const [chat, setChat] = useState();
+const Message = ({ navigation, isLeft }) => {
+  const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
-  const messages = [];
-  // console.log(getMessages())
+
+  // useEffect(() => {
+  //   getMessages().then((msgs) => {
+  //     let output = [];
+  //     msgs.docs.forEach((msg) => {
+  //       output.push({
+  //         key: msg.id,
+  //         value: msg.data(),
+  //       });
+  //     });
+  //     setChat(output);
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    const subscriber = messageRef
+      .orderBy("createdAt")
+      .limit(25)
+      .onSnapshot((documentSnapshot) => {
+        let output = [];
+        documentSnapshot.docs.forEach((msg) => {
+          output.push({
+            key: msg.id,
+            value: msg.data(),
+          });
+        });
+        console.log(output);
+        setChat(output);
+      });
+
+    // Stop listening for updates when no longer required
+    return () => subscriber();
+  }, []);
 
   const sendMessage = () => {
     if (!message)
@@ -37,6 +73,13 @@ const Message = ({ navigation, time, isLeft, messageing }) => {
 
     ToastAndroid.show("Sending Message", ToastAndroid.SHORT);
     //TODO: add interactivity
+    const { uid, photoURL } = getCurrentUser();
+    messageRef.add({
+      text: message,
+      createdAt: getServerTimestamp(),
+      uid: uid,
+      photoURL: photoURL,
+    });
     setMessage("");
   };
 
@@ -91,8 +134,14 @@ const Message = ({ navigation, time, isLeft, messageing }) => {
       </View>
       {/* Message ScrollView section start */}
       <ScrollView style={{ paddingVertical: 10, marginVertical: 5, flex: 1 }}>
-      {/* {messages&&messages.map()} */}
-        <MessageList isLeft message="" time=""/>
+        {chat &&
+          chat.map((chatContent) => (
+            <MessageList
+              isLeft={chatContent.value.uid !== getCurrentUser.uid}
+              message={chatContent.value.text}
+              key={chatContent.key}
+            />
+          ))}
       </ScrollView>
       {/* Message ScrollView section end */}
 

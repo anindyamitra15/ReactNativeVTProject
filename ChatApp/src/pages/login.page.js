@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from "react-native";
-import { signIn } from "../../firebase";
+import { signIn, googleSignIn } from "../../firebase";
 
 const Login = ({ navigation }) => {
   //states for login
@@ -89,8 +89,7 @@ const Login = ({ navigation }) => {
                   <Text style={styles.signInButtonText}>Sign in</Text>
                 </TouchableOpacity>
               </View>
-              {/* TODO: expo doesn't seem to have google auth */}
-              {/* <TouchableOpacity>
+              {/* <TouchableOpacity onPress={googleSignIn}>
                 <Text style={styles.googleSignInText}>Google Sign In</Text>
               </TouchableOpacity> */}
             </View>

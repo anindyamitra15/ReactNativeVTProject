@@ -1,106 +1,67 @@
 import { useState } from "react";
-
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithCredential,
-  signOut,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-
-import {
-  ref,
-  getFirestore,
-  collection,
-  doc,
-  orderBy,
-  limit,
-  setDoc,
-  getDoc,
-  getDocs,
-} from "firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 import { ToastAndroid } from "react-native";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDl-xX016yxmIC94ED6Tn9rGs9oxZ26vTc",
-  authDomain: "reactnativevtproject.firebaseapp.com",
-  databaseURL:
-    "https://reactnativevtproject-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "reactnativevtproject",
-  storageBucket: "reactnativevtproject.appspot.com",
-  messagingSenderId: "177988330912",
-  appId: "1:177988330912:web:fc27988802c0bd291370c5",
-};
-
-//initialize firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore(app);
+GoogleSignin.configure({
+  webClientId:
+    "177988330912-2vr71bb0u2h9ukarhcimgq5sp4q9ud17.apps.googleusercontent.com",
+});
 
 export const signUp = async (email, password, name, phone) => {
+  await auth().createUserWithEmailAndPassword(email, password, name, phone);
+
+  ToastAndroid.show(`Account for ${name} created`, ToastAndroid.SHORT);
+
+  await firestore().collection("users").doc(getCurrentUser().uid).set({
+    name: name,
+    email: email,
+    phone: phone,
+  });
+
+  ToastAndroid.show(`${name}'s database updated`, ToastAndroid.SHORT);
+};
+
+export const signIn = async (email, password) => {
+  await auth().signInWithEmailAndPassword(email, password);
+};
+
+export const googleSignIn = async () => {
   try {
-    const credential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-      name,
-      phone
-    );
-    ToastAndroid.show(`Account for ${name} created`, ToastAndroid.SHORT);
-
-    await setDoc(doc(db, "users", credential.user.uid), {
-      name: name,
-      email: email,
-      phone: phone,
-    });
-
-    ToastAndroid.show(`${name}'s database updated`, ToastAndroid.SHORT);
+    const { idToken } = await GoogleSignin.signIn();
+    console.log("idToken", idToken);
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    return auth().signInWithCredential(googleCredential);
   } catch (error) {
-    throw error;
+    console.log(error);
   }
 };
 
-export const signIn = async (email = "", password = "") => {
-  return signInWithEmailAndPassword(auth, email, password);
+export const getCurrentUser = () => {
+  return auth().currentUser;
 };
 
-export function getCurrentUser() {
-  return getAuth().currentUser;
-}
+export const signUserOut = async () => {
+  await auth().signOut();
+};
 
-export function signUserOut() {
-  // console.log(await signOut(auth));
-  return signOut(auth);
-  // console.log(signOut(auth))
-}
+export const messageRef = firestore().collection("messages");
 
-export function getMessages() {
-  // try {
-  // const messagesRef = doc(db, "messages", "cnwWgtnqfZeVox4OoMlT");
-  // getDoc(messagesRef).then((docu) => console.log(docu.data()));
+export const getMessages = async () => {
+  return await messageRef.orderBy("createdAt").limit(25).get();
+};
 
-  // const query = orderBy(messagesRef, "createdAt", "asc").limit(25);
-  // getDocs(query).then((docu) => console.log(76, docu));
+export const getServerTimestamp = () => {
+  return firestore.FieldValue.serverTimestamp();
+};
 
-  const messagesRef = collection(db, "messages");
-  // const query = messageRef.orderBy("createdAt")
-  const output = {};
-  
-  getDocs(messagesRef)
-    .then((docu) => {
-      docu.docs.forEach((docSnap) => {
-        output[docSnap.id] = docSnap.data();
-      });
-      console.log(output);
-    })
-    .catch((error) => console.log(error));
-
-  // } catch (error) {
-  //   return error.message;
-  // }
-}
-
-getMessages();
+export const getMessagesSubscription = async () => {
+  return messageRef
+    .orderBy("createdAt")
+    .limit(25)
+    .onSnapshot((documentSnapshot) => {
+      // console.log("User data: ", documentSnapshot);
+    });
+};

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from "react-native";
-import { signIn } from "../../firebase";
+import { signIn, googleSignIn } from "../../firebase";
 
 const Login = ({ navigation }) => {
   //states for login
@@ -25,7 +25,7 @@ const Login = ({ navigation }) => {
       navigation.replace("Message");
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        navigation.navigate("SignUp");
+        navigation.replace("SignUp");
         ToastAndroid.show(
           "User not found, please sign up...",
           ToastAndroid.SHORT
@@ -89,15 +89,14 @@ const Login = ({ navigation }) => {
                   <Text style={styles.signInButtonText}>Sign in</Text>
                 </TouchableOpacity>
               </View>
-              {/* TODO: expo doesn't seem to have google auth */}
-              {/* <TouchableOpacity>
+              {/* <TouchableOpacity onPress={googleSignIn}>
                 <Text style={styles.googleSignInText}>Google Sign In</Text>
               </TouchableOpacity> */}
             </View>
 
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("SignUp");
+                navigation.replace("SignUp");
               }}
               style={{ paddingBottom: 70 }}
             >

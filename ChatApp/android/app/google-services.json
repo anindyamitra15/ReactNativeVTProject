@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "177988330912",
+    "firebase_url": "https://reactnativevtproject-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "reactnativevtproject",
+    "storage_bucket": "reactnativevtproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177988330912:android:250f4dd4cc3000d31370c5",
+        "android_client_info": {
+          "package_name": "com.quicktalk.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177988330912-2vr71bb0u2h9ukarhcimgq5sp4q9ud17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4BCErbZcz7l8suIc7FuPxYbO8hLkVIqw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177988330912-2vr71bb0u2h9ukarhcimgq5sp4q9ud17.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

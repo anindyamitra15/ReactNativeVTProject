@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,38 +11,23 @@ import {
   ToastAndroid,
   TouchableHighlight,
 } from "react-native";
-import React, { useState, useEffect } from "react";
 
-import { Button } from "react-native-elements";
 // import Icons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MessageList from "../components/MessageList";
 import {
   getCurrentUser,
   signUserOut,
-  auth,
-  getMessages,
   messageRef,
   getServerTimestamp,
 } from "../../firebase";
 import Material from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Message = ({ navigation, isLeft }) => {
+  const scrollViewRef = useRef(); 
+
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
-
-  // useEffect(() => {
-  //   getMessages().then((msgs) => {
-  //     let output = [];
-  //     msgs.docs.forEach((msg) => {
-  //       output.push({
-  //         key: msg.id,
-  //         value: msg.data(),
-  //       });
-  //     });
-  //     setChat(output);
-  //   });
-  // }, []);
 
   useEffect(() => {
     const subscriber = messageRef
@@ -55,13 +41,12 @@ const Message = ({ navigation, isLeft }) => {
             value: msg.data(),
           });
         });
-        console.log(output);
         setChat(output);
       });
 
     // Stop listening for updates when no longer required
     return () => subscriber();
-  }, []);
+  }, [message]);
 
   const sendMessage = () => {
     if (!message)
@@ -72,7 +57,7 @@ const Message = ({ navigation, isLeft }) => {
       );
 
     ToastAndroid.show("Sending Message", ToastAndroid.SHORT);
-    //TODO: add interactivity
+
     const { uid, photoURL } = getCurrentUser();
     messageRef.add({
       text: message,
@@ -81,6 +66,8 @@ const Message = ({ navigation, isLeft }) => {
       photoURL: photoURL,
     });
     setMessage("");
+
+    // scrollViewRef.scrollTo({ y: this.layout.y, animated: true })
   };
 
   const signout = async () => {
@@ -133,7 +120,9 @@ const Message = ({ navigation, isLeft }) => {
         </View>
       </View>
       {/* Message ScrollView section start */}
-      <ScrollView style={{ paddingVertical: 10, marginVertical: 5, flex: 1 }}>
+      <ScrollView ref={scrollViewRef}
+        style={{ paddingVertical: 10, marginVertical: 5, flex: 1 }}
+      >
         {chat &&
           chat.map((chatContent) => (
             <MessageList

@@ -15,7 +15,7 @@ export const signUp = async (email, password, name, phone) => {
 
   ToastAndroid.show(`Account for ${name} created`, ToastAndroid.SHORT);
 
-  await firestore().collection("users").doc(credential.user.uid).set({
+  await firestore().collection("users").doc(getCurrentUser().uid).set({
     name: name,
     email: email,
     phone: phone,

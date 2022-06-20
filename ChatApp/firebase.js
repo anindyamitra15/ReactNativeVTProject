@@ -10,7 +10,17 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import {
+  ref,
+  getFirestore,
+  collection,
+  doc,
+  orderBy,
+  limit,
+  setDoc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 
 import { ToastAndroid } from "react-native";
 
@@ -61,11 +71,36 @@ export function getCurrentUser() {
   return getAuth().currentUser;
 }
 
-
-export  function signUserOut() {
+export function signUserOut() {
   // console.log(await signOut(auth));
-  return (
-    signOut(auth)
-    // console.log(signOut(auth))
-    )
+  return signOut(auth);
+  // console.log(signOut(auth))
 }
+
+export function getMessages() {
+  // try {
+  // const messagesRef = doc(db, "messages", "cnwWgtnqfZeVox4OoMlT");
+  // getDoc(messagesRef).then((docu) => console.log(docu.data()));
+
+  // const query = orderBy(messagesRef, "createdAt", "asc").limit(25);
+  // getDocs(query).then((docu) => console.log(76, docu));
+
+  const messagesRef = collection(db, "messages");
+  // const query = messageRef.orderBy("createdAt")
+  const output = {};
+  
+  getDocs(messagesRef)
+    .then((docu) => {
+      docu.docs.forEach((docSnap) => {
+        output[docSnap.id] = docSnap.data();
+      });
+      console.log(output);
+    })
+    .catch((error) => console.log(error));
+
+  // } catch (error) {
+  //   return error.message;
+  // }
+}
+
+getMessages();

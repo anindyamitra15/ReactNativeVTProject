@@ -89,10 +89,10 @@ const Login = ({ navigation }) => {
                   <Text style={styles.signInButtonText}>Sign in</Text>
                 </TouchableOpacity>
               </View>
-
-              <TouchableOpacity>
+              {/* TODO: expo doesn't seem to have google auth */}
+              {/* <TouchableOpacity>
                 <Text style={styles.googleSignInText}>Google Sign In</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             <TouchableOpacity

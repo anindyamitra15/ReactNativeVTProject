@@ -137,7 +137,7 @@ const Message = ({ navigation, isLeft }) => {
         {chat &&
           chat.map((chatContent) => (
             <MessageList
-              isLeft={chatContent.value.uid !== getCurrentUser.uid}
+              isLeft={chatContent.value.uid !== getCurrentUser().uid}
               message={chatContent.value.text}
               key={chatContent.key}
             />
